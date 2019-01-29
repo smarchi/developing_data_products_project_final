@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cross-validation error for Random Forest algorithm</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Cross-validation error for Random Forest algorithm">
+  <meta name="author" content="Sebastián Marchi">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Cross-validation error for Random Forest algorithm</h1>
+    <h2>Developing data products final project</h2>
+    <p>Sebastián Marchi<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Motivation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>Random Forest is a popular algorithm for Machine Learning tasks.</li>
+<li>Two key parameters are the number of trees to grow (ntrees) and the number of predictors randomdly sampled at each split (mtry).</li>
+<li>It is important to know how the root mean square error varies as a function of ntrees and the number of cross-validation folds.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Description</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>This app allows you to choose between 5 or 10 cross-validation folds and the number of trees.</li>
+<li>It fits a Random Forest algorithm to the &#39;diamonds&#39; dataset, to predict the price of a diamond.</li>
+<li>The app returns a plot with the variation of the RMSE as a function of mtry.</li>
+<li>It also reports the best RMSE, the mtry for the best RMSE and a table with the values used in the plot.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Example code</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In this example, we choose 100 as the number of trees and 5 as the cross-validation folds.</p>
+
+<pre><code class="r">ntree &lt;- 100
+ncv &lt;- 5
+</code></pre>
+
+<pre><code class="r">train_data &lt;- diamonds[runif(200,1,dim(diamonds)[1]),]
+
+max_mtry &lt;- ncol(train_data)-1
+
+tunegrid &lt;- expand.grid(.mtry = c(1:max_mtry))
+model &lt;- train(data.frame(train_data[,-7]), train_data$price, 
+               method = &quot;rf&quot;, 
+               metric = &quot;RMSE&quot;,
+               trControl = trainControl(method=&quot;cv&quot;, 
+                                        number=as.integer(ncv)),
+               tuneGrid = tunegrid,
+               ntree = ntree)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Example plot</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The RMSE as a function of mtry is the following.</p>
+
+<p><img src="assets/fig/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4"></p>
+
+<h2>You can try the app <a href="https://smarchi.shinyapps.io/final_project_developing_data_products/">here</a></h2>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Motivation'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Description'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Example code'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Example plot'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
